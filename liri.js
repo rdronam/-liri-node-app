@@ -1,23 +1,57 @@
-//variables to call the information from the keys.js file which stores the twitter access keys needed for the twitter option of this app
 var keys = require('./keys.js');
-var twitterKeys = keys.twitterKeys;
 
-//sets up the variables of all of the different things required to properly run this node app
-var fs = require('fs');
-var prompt = require('prompt');
 var Twitter = require('twitter');
-var Spotify = require('spotify');
+
+var spotify = require('spotify');
+
 var request = require('request');
-var colors = require("colors/safe");
 
-//takes in the user input that calls the option you want
-var userInput = '';
+var action = process.argv[2];
 
-// //takes in the user input for the spotify & movie options
-var userSelection = '';
+var value = process.argv[3];
 
-//options that the user can choose from
-var myTweets = 'tweets';
-var songs = 'spotify-this-song';
-var movies = 'movie';
-var doWhat = 'surprise';
+switch (action) {
+    case 'my-tweets' :
+      Tweets();
+      break;
+    case 'spotify-this-song':
+      spotifythissong();
+      break;
+    default:
+}
+
+function Tweets() {
+
+  var client = new Twitter(keys.twitterKeys);
+
+  var params = {screen_name: 'rdronam', count: 20};
+  client.get('statuses/user_timeline', params, function(error, tweets, response) {
+    if (!error) {
+      for (i = 0; i < data.statuses.length; i++)
+      console.log(data.statuses[i].text);
+    }
+  });
+
+}
+
+var spotifythissong = function(songName) {
+
+  spotify.search({ type: 'track', query: 'songName' }, function(err, data) {
+    if ( err ) {
+        console.log('Error occurred: ' + err);
+        return;
+    }
+    
+    var songs = data.tracks.items;
+    for(var i=0; i<songs.length; i++) {
+      console.log(i);
+      console.log('artist(s):' + songs[i].artists.map(getArtistsNames));
+      console.log('song name:' + songs[i].name);
+      console.log('preview song:' + songs[i].preview_url);
+      console.log('album:' + songs[i].album.name);
+      console.log('____________');
+    }
+
+  });
+
+}
